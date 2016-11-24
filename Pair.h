@@ -17,6 +17,13 @@ struct Pair
     Pair(Int a, Int b) : a(a), b(b) {}
     Pair(Int bPrevious, Int a, Int b, Int aNext)
             : bPrevious(bPrevious), a(a), b(b), aNext(aNext) {}
+    bool operator==(const Pair& other) const
+    {
+        return a == other.a &&
+               b == other.b &&
+               bPrevious == other.bPrevious &&
+               aNext == other.aNext;
+    }
 
     Int length() const
     {

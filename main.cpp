@@ -3,19 +3,26 @@
 #include <assert.h>
 using namespace std;
 
-#include "Image.h"
+#include "ProcessedImage.h"
 #include "simple_ostream_test.h"
 
 int main(int argc, char *argv[])
 {
     assert(argc == 2);
 
-    string arg1{argv[1]};
+    string filename{argv[1]};
 
-    auto image = getSimpleProcessedImage();
+    auto image1 = getSimpleProcessedImage();
 
-    saveProcessedImageToFile(image, arg1);
+    ProcessedImageManager().saveProcessedImageToFile(image1, filename);
 
-    cout << image;
+    auto image2 = ProcessedImageManager().getProcessedImageFromFile(filename);
+
+    cout << image1 << endl << endl;
+    cout << image2;
+
+    cout << "input "
+         << (image1 == image2 ? "==" : "!=")
+         << " output";
     return 0;
 }

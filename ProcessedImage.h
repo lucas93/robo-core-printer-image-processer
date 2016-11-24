@@ -8,21 +8,20 @@ using ProcessedImage = std::vector<Row>;
 ostream & operator<<(ostream & ostr, const ProcessedImage & image)
 {
     ostr << image.size() << "\n";
-    for(const Row& row : image)
+    for(const auto& row : image)
     {
         ostr << row << "\n";
     }
     return ostr;
 }
 
-
 class ProcessedImageManager
 {
 private:
-    static ifstream file;
+    fstream file;
 
 public:
-    static void saveProcessedImageToFile(const ProcessedImage& img, string & filename)
+    void saveProcessedImageToFile(const ProcessedImage& img, string & filename)
     {
         ofstream file;
         file.open(filename.c_str());
@@ -30,7 +29,7 @@ public:
         file.close();
     }
 
-    static ProcessedImage getProcessedImageFromFile(string & filename)
+    ProcessedImage getProcessedImageFromFile(string & filename)
     {
         auto img = ProcessedImage();
         file.open(filename.c_str());
@@ -44,11 +43,12 @@ public:
             img.push_back(getRow());
         }
 
+        file.close();
         return img;
     }
 
 private:
-    static Row getRow()
+    Row getRow()
     {
         auto row = Row();
 
@@ -58,9 +58,23 @@ private:
 
         for (int i = 0; i < numberOfPairs; ++i)
         {
-
+            row.push_back(getPair());
         }
+        return row;
+    }
 
+    Pair getPair()
+    {
+        using Int = Pair::Int;
+
+        Int bPrevious, a, b, aNext;
+
+        file >> bPrevious;
+        file >> a;
+        file >> b;
+        file >> aNext;
+
+        return { bPrevious, a, b, aNext };
     }
 };
 
