@@ -44,21 +44,14 @@ struct Pair
 
         return str;
     }
-
-    static void serialize()
-    {
-
-    }
 };
 
 ostream & operator<<(ostream & ostr, const Pair & pair)
 {
-    ostr << "| "
-         << pair.bPrevious << ", "
-         << pair.a << ", "
-         << pair.b << ", "
-         << pair.aNext
-            << " |";
+    ostr << pair.bPrevious << " "
+         << pair.a << " "
+         << pair.b << " "
+         << pair.aNext << " ";
     return ostr;
 }
 

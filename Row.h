@@ -8,6 +8,7 @@ using Row = std::vector<Pair>;
 
 ostream & operator<<(ostream & ostr, const Row & row)
 {
+    ostr << row.size() << " ";
     for(const Pair& pair : row)
     {
         ostr << pair;

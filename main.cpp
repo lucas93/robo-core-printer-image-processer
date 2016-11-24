@@ -1,28 +1,21 @@
 #include <iostream>
-#include "Image.h"
-
+#include <fstream>
+#include <assert.h>
 using namespace std;
 
-int main()
+#include "Image.h"
+#include "simple_ostream_test.h"
+
+int main(int argc, char *argv[])
 {
-    auto i = 1;
+    assert(argc == 2);
 
-    auto pair1 = Pair{--i, ++i, ++i, ++i};
-    auto pair2 = Pair{--i, ++i, ++i, ++i};
-    auto pair3 = Pair{--i, ++i, ++i, ++i};
-    auto pair4 = Pair{--i, ++i, ++i, ++i};
-    auto pair5 = Pair{--i, ++i, ++i, ++i};
-    auto pair6 = Pair{--i, ++i, ++i, ++i};
-    auto pair7 = Pair{--i, ++i, ++i, ++i};
-    auto pair8 = Pair{--i, ++i, ++i, ++i};
-    auto pair9 = Pair{--i, ++i, ++i, ++i};
+    string arg1{argv[1]};
 
-    auto row1 = Row{pair1, pair2, pair3};
-    auto row2 = Row{pair4, pair5, pair6};
-    auto row3 = Row{pair7, pair8, pair9};
+    auto image = getSimpleProcessedImage();
 
-    auto Image = {row1, row2, row3};
+    saveProcessedImageToFile(image, arg1);
 
-    cout << Image;
+    cout << image;
     return 0;
 }
