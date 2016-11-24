@@ -5,17 +5,17 @@
 
 using Image = std::vector<Row>;
 
-/*ostream & operator<<(ostream & ostr, const Image & image)
+ostream & operator<<(ostream & ostr, const Image & image)
 {
-    ostr << "<-------------------" << endl;
+    ostr << "<\n";
     for(const Row& row : image)
     {
-        ostr << "-[";
+        ostr << "[";
         ostr << row;
-        ostr << "]-";
+        ostr << "]\n";
     }
-    ostr << ">-------------------" << endl;
+    ostr << ">";
     return ostr;
-}*/
+}
 
 #endif //ROBOCOREPRINTERFRONT_IMAGE_H

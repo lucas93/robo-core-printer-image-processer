@@ -13,7 +13,10 @@ struct Pair
     Int aNext;
     Int bPrevious;
 
+    Pair() = default;
     Pair(Int a, Int b) : a(a), b(b) {}
+    Pair(Int bPrevious, Int a, Int b, Int aNext)
+            : bPrevious(bPrevious), a(a), b(b), aNext(aNext) {}
 
     Int length() const
     {
@@ -51,10 +54,10 @@ struct Pair
 ostream & operator<<(ostream & ostr, const Pair & pair)
 {
     ostr << "| "
-         << bPrevious << ", "
-         << a << ", "
-         << b << ", "
-         << aNext
+         << pair.bPrevious << ", "
+         << pair.a << ", "
+         << pair.b << ", "
+         << pair.aNext
             << " |";
     return ostr;
 }

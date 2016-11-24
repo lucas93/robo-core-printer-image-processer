@@ -6,17 +6,13 @@
 
 using Row = std::vector<Pair>;
 
-/*ostream & operator<<(ostream & ostr, const Image & image)
+ostream & operator<<(ostream & ostr, const Row & row)
 {
-    ostr << "<-------------------" << endl;
-    for(const Row& row : image)
+    for(const Pair& pair : row)
     {
-        ostr << "-[";
-        ostr << row;
-        ostr << "]-";
+        ostr << pair;
     }
-    ostr << ">-------------------" << endl;
     return ostr;
-}*/
+}
 
 #endif //ROBOCOREPRINTERFRONT_ROW_H
