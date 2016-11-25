@@ -8,6 +8,8 @@ using String = std::string;
 struct Pair
 {
     using Int = int16_t ;
+    using type = Int;
+
     Int a;
     Int b;
     Int aNext;
