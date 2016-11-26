@@ -11,20 +11,63 @@ using namespace std;
 class ImageProcesser
 {
 private:
-    class BMP_Image
+    class BitmapImage
     {
+        using Bit = bool;
+        using BitmapRow = vector<Bit>;
+        using Bitmap = vector<BitmapRow>;
+
         BMP img;
+        Bitmap booleanBitmap;
+
     public:
-        void loadBmpImage(string bmpImageFilaname)
+
+        void prepareBmpImage(string bmpImageFilaname)
         {
-            img = BMP();
-            img.ReadFromFile(bmpImageFilaname.c_str());
+            loadBmpImage(bmpImageFilaname);
+            convertBmpImageToBoolBitmap();
         }
 
-        bool operator[](size_t )
+        BitmapRow operator[](size_t index) { return booleanBitmap[index]; }
+
+        int width() { return booleanBitmap[0].size(); }
+
+        int height() { return booleanBitmap.size(); }
+
+    private:
+
+        void loadBmpImage(string bmpImageFilaname)
+        {
+            img.ReadFromFile(bmpImageFilaname.c_str());
+        }
+        void convertBmpImageToBoolBitmap()
+        {
+            int height = img.TellHeight();
+            int width= img.TellWidth();
+
+            booleanBitmap = Bitmap(height);
+
+            for (int j = 0; j < height; ++j)
+            {
+                BitmapRow row(width);
+                for (int i = 0; i < width; ++i)
+                {
+                    Bit bit;
+                    auto pixelValue = img(i, j)->Red; //read each pixel
+                    if (pixelValue == 0)
+                        bit = true;
+                    else
+                        bit = false;
+
+                    row[i] = bit;   // insert pixel to bool bitmap
+                }
+                booleanBitmap[j] = row;
+            }
+
+        }
     };
 
-    BMP_Image img;
+    BitmapImage img;
     ProcessedImage imageResult;
     int WIDTH_MAX = 310;
     int HEIGHT_MAX = 730;

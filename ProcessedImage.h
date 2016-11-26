@@ -18,10 +18,10 @@ ostream & operator<<(ostream & ostr, const ProcessedImage & image)
 class ProcessedImageManager
 {
 private:
-    fstream file;
+    fstream textFile;
 
 public:
-    void saveProcessedImageToFile(const ProcessedImage& img, string & filename)
+    void saveProcessedImageTextToFile(const ProcessedImage &img, string &filename)
     {
         ofstream file;
         file.open(filename.c_str());
@@ -29,13 +29,18 @@ public:
         file.close();
     }
 
-    ProcessedImage getProcessedImageFromFile(string & filename)
+    ProcessedImage getProcessedImageFromSD(string &filename)
+    {
+        return ProcessedImage();
+    }
+
+    ProcessedImage getProcessedImageFromTextFile(string &filename)
     {
         auto img = ProcessedImage();
-        file.open(filename.c_str());
+        textFile.open(filename.c_str());
 
         int numberOfRows;
-        file >> numberOfRows;
+        textFile >> numberOfRows;
         img.reserve(numberOfRows);
 
         for (int i = 0; i < numberOfRows; ++i)
@@ -43,7 +48,7 @@ public:
             img.push_back(getRow());
         }
 
-        file.close();
+        textFile.close();
         return img;
     }
 
@@ -53,7 +58,7 @@ private:
         auto row = Row();
 
         int numberOfPairs;
-        file >> numberOfPairs;
+        textFile >> numberOfPairs;
         row.reserve(numberOfPairs);
 
         for (int i = 0; i < numberOfPairs; ++i)
@@ -69,10 +74,10 @@ private:
 
         Int bPrevious, a, b, aNext;
 
-        file >> bPrevious;
-        file >> a;
-        file >> b;
-        file >> aNext;
+        textFile >> bPrevious;
+        textFile >> a;
+        textFile >> b;
+        textFile >> aNext;
 
         return { bPrevious, a, b, aNext };
     }
