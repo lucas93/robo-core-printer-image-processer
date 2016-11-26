@@ -1,5 +1,3 @@
-#define private public
-
 #include <iostream>
 #include <fstream>
 #include <assert.h>
@@ -9,7 +7,7 @@ using namespace std;
 #include "simple_ostream_test.h"
 #include "ImageProcesser.h"
 
-
+#include "BitmapBoolImage.h"
 
 #define DISP(VAR) cout << #VAR " = " << VAR << endl;
 
@@ -27,12 +25,14 @@ int main(int argc, char *argv[])
 //    auto image2 = ProcessedImageManager().getProcessedImageFromTextFile(filename);
 
 
-    ImageProcesser::BitmapImage img;
+    BitmapBoolImage img;
     img.prepareBmpImage(filename);
 
-    for (int j = 0; j < img.height(); ++j) {
-        for (int i = 0; i < img.width(); ++i) {
-            cout << (img[j][i] ? "1" : " ") << " ";
+    for(auto const & row : img)
+    {
+        for(auto const & pix : row)
+        {
+            cout << (pix ? "1" : " ") << " ";
         }
         cout << endl;
     }
