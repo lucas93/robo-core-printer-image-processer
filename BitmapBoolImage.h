@@ -27,7 +27,6 @@ public:
     }
 
     int width() const { return at(0).size(); }
-
     int height() const { return size(); }
 
 private:

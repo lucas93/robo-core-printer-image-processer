@@ -27,6 +27,14 @@ struct Pair
                aNext == other.aNext;
     }
 
+    bool isEmptyPair()
+    {
+        return (a == -1)
+            || (b == -1)
+            || (aNext == -1)
+            || (bPrevious == -1);
+    }
+
     Int length() const
     {
         return b - a;
@@ -52,6 +60,11 @@ struct Pair
         str += length();
 
         return str;
+    }
+
+    static Pair getEmptyPair()
+    {
+        return Pair{-1, -1, -1, -1};
     }
 };
 
