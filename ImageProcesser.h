@@ -26,34 +26,98 @@ public:
         convertBmpImageToPairsOfLineBeginningAndEnd();
         fillResultWithPrevoiusAndNext();
         saveResultToFile(procesedImageFilename);
+
+        return imageResult;
     }
 
 private:
 
-    void prepareBmpImage(string bmpImageFilaname) // 2
+    void prepareBmpImage(const string & bmpImageFilaname) // 2
     {
-
-
+        img.prepareBmpImage(bmpImageFilaname);
     }
 
     void prepareResultImage() //  2
     {
-
+        const auto height = img.height();
+        imageResult.reserve(height);
     }
 
     void convertBmpImageToPairsOfLineBeginningAndEnd() // 2
     {
+        const auto height = img.height();
+        const auto width = img.width();
 
+        for (int yy = 0; yy < height; ++yy) // for every line
+        {
+            Row row;
+            int a = 0, b = 0;
+            for (int xx = 0; xx < width; ++xx)  // for every pixel
+            {
+                auto pixel = img[yy][xx];
+                if(pixel)
+                {
+                    a=xx++;
+                    while(xx < width  &&  img[yy][xx])
+                    {
+                        ++xx;
+                    }
+                    b = --xx;
+                    row.emplace_back(a, b);
+                }
+            }
+            imageResult.push_back(row);
+        }
     }
 
     void fillResultWithPrevoiusAndNext() // 2
     {
-
+        for(auto & row : imageResult)
+        {
+            fillFirstElementOfRow(row);
+            fillMiddleElementsOfRow(row);
+            fillLastElementOfRow(row);
+        }
     }
 
-    void saveResultToFile(string basic_string) // 2
+    void saveResultToFile(const string & procesedImageFilename) // 2
     {
+        for(auto & row : imageResult)
+        {
+            for(auto & pair : row)
+                cout << pair << "  ";
+            cout << endl;
+        }
+    }
 
+    void fillFirstElementOfRow(Row &row) const // 3
+    {
+        if(row.size() > 1)
+            row[0].aNext = row[1].a;
+        else
+            row[0].aNext = img.width() - 1;
+
+        row[0].bPrevious = 0;
+    }
+
+    void fillMiddleElementsOfRow(Row &row) // 3
+    {
+        if(row.size() > 2)
+            for (int k = 1; k < row.size() - 1; ++k)
+            {
+                row[k].aNext = row[k+1].a;
+                row[k].bPrevious= row[k-1].b;
+            }
+    }
+
+    void fillLastElementOfRow(Row &row) // 3
+    {
+        if(row.size() > 1)
+        {
+            auto lastElement = row.size() - 1;
+            row[lastElement].aNext = img.width() - 1;
+            row[lastElement].bPrevious = row[lastElement - 1].b;
+        }
     }
 };
 

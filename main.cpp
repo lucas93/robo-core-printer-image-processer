@@ -24,18 +24,10 @@ int main(int argc, char *argv[])
 //
 //    auto image2 = ProcessedImageManager().getProcessedImageFromTextFile(filename);
 
+    ImageProcesser().processImage(filename, "costam");
 
-    BitmapBoolImage img;
-    img.prepareBmpImage(filename);
+    auto i = 0;
 
-    for(auto const & row : img)
-    {
-        for(auto const & pix : row)
-        {
-            cout << (pix ? "1" : " ") << " ";
-        }
-        cout << endl;
-    }
 
     return 0;
 }
