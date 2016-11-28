@@ -8,24 +8,22 @@
 
 using namespace std;
 
-class ImageProcesser {
-private:
+class ImageProcesser
+{
     BitmapBoolImage img;
     ProcessedImage imageResult;
     int WIDTH_MAX = 310;
     int HEIGHT_MAX = 730;
-    string bitmapSourceName;
+    string bitmapImageSourceName;
     string processedImageTargetName;
 
 public:
-    ProcessedImage processImage(string bmpImageFilaname, string procesedImageFilename) // 1
+    ProcessedImage processImage(const string& bmpImageFilaname, const string& procesedImageFilename) // 1
     {
         prepareBmpImage(bmpImageFilaname);
         prepareResultImage();
-        convertBmpImageToPairsOfLineBeginningAndEnd();
-        fillResultWithPrevoiusAndNext();
+        convertBmpImageToProcessedImage();
         saveResultToFile(procesedImageFilename);
-
         return imageResult;
     }
 
@@ -42,41 +40,30 @@ private:
         imageResult.reserve(height);
     }
 
-    void convertBmpImageToPairsOfLineBeginningAndEnd() // 2
+    void convertBmpImageToProcessedImage() // 2
     {
         const auto height = img.height();
-        const auto width = img.width();
 
         for (int yy = 0; yy < height; ++yy) // for every line
         {
-            Row row = createRowOfPairs(yy);
-
-
+            Row row = createRowOfLines(yy);
             imageResult.push_back(row);
         }
     }
 
-    void fillResultWithPrevoiusAndNext() // 2
-    {
-        for (auto & row : imageResult)
-        {
-            fillFirstElementOfRow(row);
-            fillMiddleElementsOfRow(row);
-            fillLastElementOfRow(row);
-        }
-    }
 
     void saveResultToFile(const string &procesedImageFilename) // 2
     {
         for (auto &row : imageResult)
         {
-            for (auto &pair : row)
-                cout << pair << "  ";
+            cout << row.size() << " ";
+            for (auto &line : row)
+                cout << line << "  ";
             cout << endl;
         }
     }
 
-    Row createRowOfPairs(const int yy) // 3
+    Row createRowOfLines(const int yy) // 3
     {
         Row row;
         const auto width = img.width();
@@ -88,50 +75,20 @@ private:
             if( pixel )
             {
                 a = xx++;
-                while (xx < width && img[yy][xx])
-                {
+
+                while (isPixelBlack(xx, yy))
                     ++xx;
-                }
+
                 b = --xx;
                 row.emplace_back(a, b);
             }
         }
-        if( row.empty())
-            row.emplace_back(Pair::getEmptyPair());
         return row;
     }
 
-    void fillFirstElementOfRow(Row &row) const // 3
+    bool isPixelBlack(int xx, int yy)
     {
-        if( row[0].isEmptyPair() == false)
-        {
-            if( row.size() > 1 )
-                row[0].aNext = row[1].a;
-            else
-                row[0].aNext = img.width() - 1;
-
-            row[0].bPrevious = 0;
-        }
-    }
-
-    void fillMiddleElementsOfRow(Row &row) // 3
-    {
-        if( row.size() > 2 )
-            for (int k = 1; k < row.size() - 1; ++k)
-            {
-                row[k].aNext = row[k + 1].a;
-                row[k].bPrevious = row[k - 1].b;
-            }
-    }
-
-    void fillLastElementOfRow(Row &row) // 3
-    {
-        if( row.size() > 1 )
-        {
-            auto lastElement = row.size() - 1;
-            row[lastElement].aNext = img.width() - 1;
-            row[lastElement].bPrevious = row[lastElement - 1].b;
-        }
+        return xx < img.width() && img[yy][xx];
     }
 };
 

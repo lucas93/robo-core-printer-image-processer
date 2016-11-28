@@ -31,6 +31,7 @@ public:
 
     ProcessedImage getProcessedImageFromSD(string &filename)
     {
+        // TODO
         return ProcessedImage();
     }
 
@@ -63,23 +64,19 @@ private:
 
         for (int i = 0; i < numberOfPairs; ++i)
         {
-            row.push_back(getPair());
+            row.push_back(getLine());
         }
         return row;
     }
 
-    Pair getPair()
+    Line getLine()
     {
-        using Int = Pair::Int;
+        Line::point_type a, b;
 
-        Int bPrevious, a, b, aNext;
-
-        textFile >> bPrevious;
         textFile >> a;
         textFile >> b;
-        textFile >> aNext;
 
-        return { bPrevious, a, b, aNext };
+        return { a, b };
     }
 };
 

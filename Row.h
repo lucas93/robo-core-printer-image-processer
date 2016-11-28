@@ -1,17 +1,17 @@
 #ifndef ROBOCOREPRINTERFRONT_ROW_H
 #define ROBOCOREPRINTERFRONT_ROW_H
 
-#include "Pair.h"
+#include "Line.h"
 #include <vector>
 
-using Row = std::vector<Pair>;
+using Row = std::vector<Line>;
 
 ostream & operator<<(ostream & ostr, const Row & row)
 {
     ostr << row.size() << " ";
-    for(const auto& pair : row)
+    for(const auto& line : row)
     {
-        ostr << pair;
+        ostr << line;
     }
     return ostr;
 }
