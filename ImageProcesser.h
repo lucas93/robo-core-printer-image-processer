@@ -16,7 +16,7 @@ class ImageProcesser
     int HEIGHT_MAX = 730;
     string bitmapImageSourceName;
     string processedImageTargetName;
-    fstream saveFile;
+    ofstream saveFile;
 
 public:
     ProcessedImage processImage(const string& bmpImageFilaname, const string& procesedImageFilename) // 1
@@ -55,6 +55,7 @@ private:
     void saveResultToFile(const string &procesedImageFilename) // 2
     {
         saveFile.open(procesedImageFilename.c_str());
+
 
         saveValueToFile(WIDTH_MAX);
         saveValueToFile(HEIGHT_MAX);
