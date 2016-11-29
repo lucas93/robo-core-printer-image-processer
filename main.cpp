@@ -14,9 +14,11 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    assert(argc == 2);
+    assert(argc == 3);
 
-    string filename{argv[1]};
+    string bmpFileName{argv[1]};
+    string RoboCoreFileName{argv[2]};
+
 
 //    auto image1 = getSimpleProcessedImage();
 //
@@ -24,10 +26,11 @@ int main(int argc, char *argv[])
 //
 //    auto image2 = ProcessedImageManager().getProcessedImageFromTextFile(filename);
 
-    ImageProcesser().processImage(filename, "costam");
+    auto baseImage = ImageProcesser().processImage(bmpFileName, RoboCoreFileName);
 
-    auto i = 0;
+    auto loadedImg = ProcessedImageManager().loadProcessedImageFromTextFile(RoboCoreFileName);
 
+    assert(baseImage == loadedImg);
 
     return 0;
 }
