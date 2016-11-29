@@ -16,6 +16,7 @@ class ImageProcesser
     int HEIGHT_MAX = 730;
     string bitmapImageSourceName;
     string processedImageTargetName;
+    fstream saveFile;
 
 public:
     ProcessedImage processImage(const string& bmpImageFilaname, const string& procesedImageFilename) // 1
@@ -37,58 +38,86 @@ private:
     void prepareResultImage() //  2
     {
         const auto height = img.height();
-        imageResult.reserve(height);
+        imageResult = ProcessedImage(height);
     }
 
     void convertBmpImageToProcessedImage() // 2
     {
-        const auto height = img.height();
+        int rowNumber = 0;
 
-        for (int yy = 0; yy < height; ++yy) // for every line
+        for (auto & row : imageResult)
         {
-            Row row = createRowOfLines(yy);
-            imageResult.push_back(row);
+            row = getRowOfLines(rowNumber);
+            ++rowNumber;
         }
     }
-
 
     void saveResultToFile(const string &procesedImageFilename) // 2
     {
+        saveFile.open(procesedImageFilename.c_str());
+
+        saveValueToFile(WIDTH_MAX);
+        saveValueToFile(HEIGHT_MAX);
+
+        saveValueToFile(imageResult.size()); // number of rows (height)
+
         for (auto &row : imageResult)
         {
-            cout << row.size() << " ";
+            saveValueToFile(row.size());    // number of lines in a row
+
             for (auto &line : row)
-                cout << line << "  ";
-            cout << endl;
+            {
+                saveValueToFile(line.a);
+                saveValueToFile(line.b);
+            }
         }
+
+        saveFile.close();
     }
 
-    Row createRowOfLines(const int yy) // 3
+    template <typename T>
+    void saveValueToFile(T val)  // 3
+    {
+        saveFile << val << " ";
+    }
+
+    Row getRowOfLines(const int rowNumber) // 3
     {
         Row row;
         const auto width = img.width();
-        int a = 0, b = 0;
 
-        for (int xx = 0; xx < width; ++xx)  // for every pixel
+        for (int x = 0, y = rowNumber; x < width; ++x)
         {
-            auto pixel = img[yy][xx];
-            if( pixel )
+            if( isPixelBlack(x, y) )
             {
-                a = xx++;
-
-                while (isPixelBlack(xx, yy))
-                    ++xx;
-
-                b = --xx;
-                row.emplace_back(a, b);
+                Line line = getCompleteLineStartingFromGivenPoint(x, y, row);
+                row.emplace_back(line);
             }
         }
         return row;
     }
 
-    bool isPixelBlack(int xx, int yy)
+    Line getCompleteLineStartingFromGivenPoint( int& x, const int y, Row& row) // 4
     {
-        return xx < img.width() && img[yy][xx];
+        Line::point_type a = x++;
+
+        while (isPixelBlack(x, y) && isPixelInRange(x, y))
+            ++x;
+
+        Line::point_type b = --x;
+
+        return Line{a, b};
+    }
+
+    bool isPixelBlack(int x, int y) // 5
+    {
+        return img[y][x];
+    }
+
+    bool isPixelInRange(int xx, int yy) // 5
+    {
+        return xx < img.width() &&
+               yy < img.height();
     }
 };
 

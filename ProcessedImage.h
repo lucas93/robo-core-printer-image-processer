@@ -29,25 +29,26 @@ public:
         file.close();
     }
 
-    ProcessedImage getProcessedImageFromSD(string &filename)
+    ProcessedImage loadProcessedImageFromSD(string &filename)
     {
         // TODO
         return ProcessedImage();
     }
 
-    ProcessedImage getProcessedImageFromTextFile(string &filename)
+    ProcessedImage loadProcessedImageFromTextFile(string &filename)
     {
-        auto img = ProcessedImage();
         textFile.open(filename.c_str());
 
-        int numberOfRows;
-        textFile >> numberOfRows;
-        img.reserve(numberOfRows);
+        int HEIGHT_MAX, WIDTH_MAX, numberOfRows;
 
-        for (int i = 0; i < numberOfRows; ++i)
-        {
-            img.push_back(getRow());
-        }
+        textFile >> HEIGHT_MAX;
+        textFile >> WIDTH_MAX;
+
+        textFile >> numberOfRows;
+        auto img = ProcessedImage(numberOfRows);
+
+        for (auto & row : img)
+            row = getRow();
 
         textFile.close();
         return img;
@@ -56,15 +57,14 @@ public:
 private:
     Row getRow()
     {
-        auto row = Row();
+        int numberOfLines;
+        textFile >> numberOfLines;
 
-        int numberOfPairs;
-        textFile >> numberOfPairs;
-        row.reserve(numberOfPairs);
+        auto row = Row(numberOfLines);
 
-        for (int i = 0; i < numberOfPairs; ++i)
+        for (auto & line : row)
         {
-            row.push_back(getLine());
+            line = getLine();
         }
         return row;
     }
@@ -76,7 +76,7 @@ private:
         textFile >> a;
         textFile >> b;
 
-        return { a, b };
+        return Line{ a, b };
     }
 };
 
