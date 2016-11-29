@@ -10,7 +10,7 @@ ostream & operator<<(ostream & ostr, const Row & row)
 {
     ostr << row.size() << " ";
     for(const auto& line : row)
-        ostr << line;
+        ostr << line << " ";
 
     return ostr;
 }
