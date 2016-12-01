@@ -3,8 +3,13 @@
 
 #include "Line.h"
 #include <vector>
+#ifdef __ISENSOR_H__
+#include "SerialDisplay.h"
+#endif
 
 using Row = std::vector<Line>;
+
+#ifndef __ISENSOR_H__
 
 ostream & operator<<(ostream & ostr, const Row & row)
 {
@@ -14,5 +19,25 @@ ostream & operator<<(ostream & ostr, const Row & row)
 
     return ostr;
 }
+
+#endif // #ifndef __ISENSOR_H__
+
+
+
+#ifdef __ISENSOR_H__
+
+template<>
+SerialDisplay& operator<< (SerialDisplay& serial, const Row & row)
+{
+    serial << row.size() << "\n";
+    for(const auto& line : row)
+    {
+        serial << line << "\n";
+    }
+    return serial;
+}
+
+#endif // #ifdef __ISENSOR_H__
+
 
 #endif //ROBOCOREPRINTERFRONT_ROW_H

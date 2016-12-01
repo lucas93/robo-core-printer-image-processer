@@ -2,6 +2,9 @@
 #define ROBOCOREPRINTERIMAGECONVERTER_IMAGEPROCESSER_H
 
 #include <string>
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
 #include "fstream"
 #include "ProcessedImage.h"
 #include "BitmapBoolImage.h"
@@ -12,8 +15,8 @@ class ImageProcesser
 {
     BitmapBoolImage img;
     ProcessedImage imageResult;
-    int WIDTH_MAX = 310;
-    int HEIGHT_MAX = 730;
+    int WIDTH_MAX = 220;
+    int HEIGHT_MAX = 270;
     string bitmapImageSourceName;
     string processedImageTargetName;
     ofstream saveFile;
@@ -56,10 +59,8 @@ private:
     {
         saveFile.open(procesedImageFilename.c_str());
 
-
         saveValueToFile(WIDTH_MAX);
         saveValueToFile(HEIGHT_MAX);
-
         saveValueToFile(imageResult.size()); // number of rows (height)
 
         for (auto &row : imageResult)
@@ -72,8 +73,9 @@ private:
                 saveValueToFile(line.b);
             }
         }
-
         saveFile.close();
+
+        //addNumberOfCharactersInFileToBeginningOfFile(procesedImageFilename);
     }
 
     template <typename T>
@@ -119,6 +121,62 @@ private:
     {
         return xx < img.width() &&
                yy < img.height();
+    }
+
+    void addNumberOfCharactersInFileToBeginningOfFile(const string& fileName)
+    {
+        int numberOfCharacters = numberOfCharactersInTextFile(fileName);
+        numberOfCharacters += lengthOfInt(numberOfCharacters) + 1;
+
+        string tempFileName = fileName + ".temp";
+        copyFile(fileName, tempFileName);
+
+        remove(fileName.c_str());
+        saveFile.open(fileName);
+        saveValueToFile(numberOfCharacters);
+        saveFile.close();
+
+        appendToFile(tempFileName, fileName);
+        remove(tempFileName.c_str());
+    }
+
+    void copyFile(const string& source, const string& target, bool append = false )
+    {
+        ifstream in(source);
+        ofstream out;
+
+        if(append)
+            out.open(target, std::ios_base::app);
+        else
+            out.open(target);
+
+        string str;
+        while(getline(in,str))
+        {
+            out<<str;
+        }
+        in.close(); // <---
+        out.close(); // <---
+    }
+
+    void appendToFile(const string& source, const string& target )
+    {
+        copyFile(source, target, true);
+    }
+
+    int numberOfCharactersInTextFile(const string& fileName)
+    {
+        ifstream inMyStream (fileName);
+        inMyStream.seekg(0,std::ios_base::end);
+        std::ios_base::streampos end_pos = inMyStream.tellg();
+
+        return end_pos;
+    }
+
+    int lengthOfInt(int num)
+    {
+        char buffer[10];
+        return sprintf(buffer, "%d", num);
     }
 };
 
