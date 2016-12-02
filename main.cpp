@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
                              RoboCoreFileName,
                              WIDTH_MAX,
                              HEIGHT_MAX);
-    auto baseImage = processer.getProcessedImage();
+    auto baseImage = processer.ConvertAndSaveImage();
 
 
     // test

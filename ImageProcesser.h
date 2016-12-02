@@ -32,27 +32,21 @@ public:
                    HEIGHT_MAX (HEIGHT_MAX)
     {}
 
-    ProcessedImage getProcessedImage()// 1
+    ProcessedImage ConvertAndSaveImage()// 1
     {
-        prepareBmpImage(bmpImageFilaname);
-        prepareResultImage();
+        prepare(bmpImageFilaname);
         convertBmpImageToProcessedImage();
-        imageResult = getMirrorOfImage(imageResult); // potrzebne by nie drukowało lustrzanego odbicia
+        createMirrorOfImage(imageResult); // potrzebne by nie drukowało lustrzanego odbicia
         saveResultToFile(procesedImageFilename);
         return imageResult;
     }
 
 private:
 
-    void prepareBmpImage(const string &bmpImageFilaname) // 2
+    void prepare(const string &bmpImageFilaname)
     {
-        img.prepareBmpImage(bmpImageFilaname);
-    }
-
-    void prepareResultImage() //  2
-    {
-        const auto height = img.height();
-        imageResult = ProcessedImage(height);
+        prepareBmpImage(bmpImageFilaname);
+        prepareResultImage();
     }
 
     void convertBmpImageToProcessedImage() // 2
@@ -66,33 +60,15 @@ private:
         }
     }
 
-    void saveResultToFile(const string &procesedImageFilename) // 2
+    void prepareBmpImage(const string &bmpImageFilaname) // 2
     {
-        saveFile.open(procesedImageFilename.c_str());
-
-        saveValueToFile(WIDTH_MAX);
-        saveValueToFile(HEIGHT_MAX);
-        saveValueToFile(imageResult.size()); // number of rows (height)
-
-        for (auto &row : imageResult)
-        {
-            saveValueToFile(row.size());    // number of lines in a row
-
-            for (auto &line : row)
-            {
-                saveValueToFile(line.a);
-                saveValueToFile(line.b);
-            }
-        }
-        saveFile.close();
-
-        //addNumberOfCharactersInFileToBeginningOfFile(procesedImageFilename);
+        img.prepareBmpImage(bmpImageFilaname);
     }
 
-    template <typename T>
-    void saveValueToFile(T val)  // 3
+    void prepareResultImage() //  2
     {
-        saveFile << val << " ";
+        const auto height = img.height();
+        imageResult = ProcessedImage(height);
     }
 
     Row getRowOfLines(const int rowNumber) // 3
@@ -135,7 +111,34 @@ private:
                yy < img.height();
     }
 
-    ProcessedImage getMirrorOfImage(const ProcessedImage& sourceImage)
+    void saveResultToFile(const string &procesedImageFilename) // 2
+    {
+        saveFile.open(procesedImageFilename.c_str());
+
+        saveValueToFile(WIDTH_MAX);
+        saveValueToFile(HEIGHT_MAX);
+        saveValueToFile(imageResult.size()); // number of rows (height)
+
+        for (auto &row : imageResult)
+        {
+            saveValueToFile(row.size());    // number of lines in a row
+
+            for (auto &line : row)
+            {
+                saveValueToFile(line.a);
+                saveValueToFile(line.b);
+            }
+        }
+        saveFile.close();
+    }
+
+    template <typename T>
+    void saveValueToFile(T val)  // 3
+    {
+        saveFile << val << " ";
+    }
+
+    ProcessedImage createMirrorOfImage(const ProcessedImage& sourceImage)
     {
         int height = sourceImage.size();
         ProcessedImage mirroredImage(height);
