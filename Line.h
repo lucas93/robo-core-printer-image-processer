@@ -43,7 +43,7 @@ struct Line
 };
 
 #ifndef __ISENSOR_H__
-
+// dla części programu działającej na PC
 ostream & operator<<(ostream & ostr, const Line & line)
 {
     ostr << line.a << " "
