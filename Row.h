@@ -10,7 +10,7 @@
 using Row = std::vector<Line>;
 
 #ifndef __ISENSOR_H__
-
+// dla części programu działającej na PC
 ostream & operator<<(ostream & ostr, const Row & row)
 {
     ostr << row.size() << " ";
@@ -25,7 +25,7 @@ ostream & operator<<(ostream & ostr, const Row & row)
 
 
 #ifdef __ISENSOR_H__
-
+// dal części programu działjącej na RoboCore
 template<>
 SerialDisplay& operator<< (SerialDisplay& serial, const Row & row)
 {

@@ -36,9 +36,8 @@ public:
     {
         prepareBmpImage(bmpImageFilaname);
         prepareResultImage();
-        prepare(bmpImageFilaname);
         convertBmpImageToProcessedImage();
-        createMirrorOfImage(imageResult); // potrzebne by nie drukowało lustrzanego odbicia
+        createMirrorOfImage(); // potrzebne by nie drukowało lustrzanego odbicia
         saveResultToFile(procesedImageFilename);
         return imageResult;
     }
@@ -135,12 +134,12 @@ private:
         saveFile << val << " ";
     }
 
-    ProcessedImage createMirrorOfImage(const ProcessedImage& sourceImage)
+    void createMirrorOfImage()
     {
-        int height = sourceImage.size();
+        int height = imageResult.size();
         ProcessedImage mirroredImage(height);
 
-        std::transform(begin(sourceImage), end(sourceImage), begin(mirroredImage), [this](const Row & sourceRow)
+        std::transform(begin(imageResult), end(imageResult), begin(mirroredImage), [this](const Row & sourceRow)
         {
             int numberOfLines = sourceRow.size();
             Row mirroredRow(numberOfLines);
@@ -155,7 +154,7 @@ private:
             return mirroredRow;
         });
 
-        return mirroredImage;
+        imageResult = mirroredImage;
     }
 };
 

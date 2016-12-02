@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     int WIDTH_MAX{ stoi(argv[3]) };
     int HEIGHT_MAX{ stoi(argv[4]) };
 
-    ImageProcesser processer(bmpFileName,
+    ImageConverter processer(bmpFileName,
                              RoboCoreFileName,
                              WIDTH_MAX,
                              HEIGHT_MAX);

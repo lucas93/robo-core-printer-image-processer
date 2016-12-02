@@ -6,6 +6,7 @@
 #include "EasyBMP/EasyBMP.h"
 using namespace std;
 
+// Trzyma jednobitowe zdjęcie w formie macierzy zer i jedynek
 class BitmapBoolImage : private vector< vector<bool> >
 {
     using Bit = bool;
