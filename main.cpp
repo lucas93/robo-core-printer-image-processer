@@ -3,7 +3,7 @@
 #include <assert.h>
 using namespace std;
 
-#include "ProcessedImage.h"
+#include "ConvertedImage.h"
 #include "ImageProcesser.h"
 
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
 
     // test
-    auto loadedImg = ProcessedImageManager().loadProcessedImageFromTextFile(RoboCoreFileName);
+    auto loadedImg = ConvertedImageManager().loadConvertedImageFromTextFile(RoboCoreFileName);
     assert(baseImage == loadedImg);
 
 

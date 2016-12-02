@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cstdio>
 #include "fstream"
-#include "ProcessedImage.h"
+#include "ConvertedImage.h"
 #include "BitmapBoolImage.h"
 
 using namespace std;
@@ -14,7 +14,7 @@ using namespace std;
 class ImageConverter
 {
     BitmapBoolImage img;
-    ProcessedImage imageResult;
+    ConvertedImage imageResult;
     int WIDTH_MAX;
     int HEIGHT_MAX;
     string bmpImageFilaname;
@@ -32,7 +32,7 @@ public:
                    HEIGHT_MAX (HEIGHT_MAX)
     {}
 
-    ProcessedImage ConvertAndSaveImage()// 1
+    ConvertedImage ConvertAndSaveImage()// 1
     {
         prepareBmpImage(bmpImageFilaname);
         prepareResultImage();
@@ -52,7 +52,7 @@ private:
     void prepareResultImage() //  2
     {
         const auto height = img.height();
-        imageResult = ProcessedImage(height);
+        imageResult = ConvertedImage(height);
     }
 
     void convertBmpImageToProcessedImage() // 2
@@ -137,7 +137,7 @@ private:
     void createMirrorOfImage()
     {
         int height = imageResult.size();
-        ProcessedImage mirroredImage(height);
+        ConvertedImage mirroredImage(height);
 
         std::transform(begin(imageResult), end(imageResult), begin(mirroredImage), [this](const Row & sourceRow)
         {
