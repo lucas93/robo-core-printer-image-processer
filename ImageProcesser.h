@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class ImageProcesser
+class ImageConverter
 {
     BitmapBoolImage img;
     ProcessedImage imageResult;
@@ -22,7 +22,7 @@ class ImageProcesser
     ofstream saveFile;
 
 public:
-    ImageProcesser(const string& bmpImageFilaname,
+    ImageConverter(const string& bmpImageFilaname,
                    const string& procesedImageFilename,
                    int WIDTH_MAX,
                    int HEIGHT_MAX) :
@@ -34,6 +34,8 @@ public:
 
     ProcessedImage ConvertAndSaveImage()// 1
     {
+        prepareBmpImage(bmpImageFilaname);
+        prepareResultImage();
         prepare(bmpImageFilaname);
         convertBmpImageToProcessedImage();
         createMirrorOfImage(imageResult); // potrzebne by nie drukowało lustrzanego odbicia
@@ -43,10 +45,15 @@ public:
 
 private:
 
-    void prepare(const string &bmpImageFilaname)
+    void prepareBmpImage(const string &bmpImageFilaname) // 2
     {
-        prepareBmpImage(bmpImageFilaname);
-        prepareResultImage();
+        img.prepareBmpImage(bmpImageFilaname);
+    }
+
+    void prepareResultImage() //  2
+    {
+        const auto height = img.height();
+        imageResult = ProcessedImage(height);
     }
 
     void convertBmpImageToProcessedImage() // 2
@@ -60,16 +67,6 @@ private:
         }
     }
 
-    void prepareBmpImage(const string &bmpImageFilaname) // 2
-    {
-        img.prepareBmpImage(bmpImageFilaname);
-    }
-
-    void prepareResultImage() //  2
-    {
-        const auto height = img.height();
-        imageResult = ProcessedImage(height);
-    }
 
     Row getRowOfLines(const int rowNumber) // 3
     {
