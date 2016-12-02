@@ -15,18 +15,29 @@ class ImageProcesser
 {
     BitmapBoolImage img;
     ProcessedImage imageResult;
-    int WIDTH_MAX = 220;
-    int HEIGHT_MAX = 270;
-    string bitmapImageSourceName;
-    string processedImageTargetName;
+    int WIDTH_MAX;
+    int HEIGHT_MAX;
+    string bmpImageFilaname;
+    string procesedImageFilename;
     ofstream saveFile;
 
 public:
-    ProcessedImage processImage(const string& bmpImageFilaname, const string& procesedImageFilename) // 1
+    ImageProcesser(const string& bmpImageFilaname,
+                   const string& procesedImageFilename,
+                   int WIDTH_MAX,
+                   int HEIGHT_MAX) :
+                   bmpImageFilaname(bmpImageFilaname),
+                   procesedImageFilename(procesedImageFilename),
+                   WIDTH_MAX(WIDTH_MAX),
+                   HEIGHT_MAX (HEIGHT_MAX)
+    {}
+
+    ProcessedImage getProcessedImage()// 1
     {
         prepareBmpImage(bmpImageFilaname);
         prepareResultImage();
         convertBmpImageToProcessedImage();
+        imageResult = getMirrorOfImage(imageResult); // potrzebne by nie drukowało lustrzanego odbicia
         saveResultToFile(procesedImageFilename);
         return imageResult;
     }
@@ -89,7 +100,8 @@ private:
         Row row;
         const auto width = img.width();
 
-        for (int x = 0, y = rowNumber; x < width; ++x)
+        const int y = rowNumber;
+        for (int x = 0; x < width; ++x)
         {
             if( isPixelBlack(x, y) )
             {
@@ -123,60 +135,27 @@ private:
                yy < img.height();
     }
 
-    void addNumberOfCharactersInFileToBeginningOfFile(const string& fileName)
+    ProcessedImage getMirrorOfImage(const ProcessedImage& sourceImage)
     {
-        int numberOfCharacters = numberOfCharactersInTextFile(fileName);
-        numberOfCharacters += lengthOfInt(numberOfCharacters) + 1;
+        int height = sourceImage.size();
+        ProcessedImage mirroredImage(height);
 
-        string tempFileName = fileName + ".temp";
-        copyFile(fileName, tempFileName);
-
-        remove(fileName.c_str());
-        saveFile.open(fileName);
-        saveValueToFile(numberOfCharacters);
-        saveFile.close();
-
-        appendToFile(tempFileName, fileName);
-        remove(tempFileName.c_str());
-    }
-
-    void copyFile(const string& source, const string& target, bool append = false )
-    {
-        ifstream in(source);
-        ofstream out;
-
-        if(append)
-            out.open(target, std::ios_base::app);
-        else
-            out.open(target);
-
-        string str;
-        while(getline(in,str))
+        std::transform(begin(sourceImage), end(sourceImage), begin(mirroredImage), [this](const Row & sourceRow)
         {
-            out<<str;
-        }
-        in.close(); // <---
-        out.close(); // <---
-    }
+            int numberOfLines = sourceRow.size();
+            Row mirroredRow(numberOfLines);
+            std::transform(rbegin(sourceRow), rend(sourceRow), begin(mirroredRow), [this](const Line sourceLine)
+            {
+                auto mirrorA = WIDTH_MAX - sourceLine.b;
+                auto mirrorB = WIDTH_MAX - sourceLine.a;
 
-    void appendToFile(const string& source, const string& target )
-    {
-        copyFile(source, target, true);
-    }
+                return Line{ mirrorA, mirrorB };
+            });
 
-    int numberOfCharactersInTextFile(const string& fileName)
-    {
-        ifstream inMyStream (fileName);
-        inMyStream.seekg(0,std::ios_base::end);
-        std::ios_base::streampos end_pos = inMyStream.tellg();
+            return mirroredRow;
+        });
 
-        return end_pos;
-    }
-
-    int lengthOfInt(int num)
-    {
-        char buffer[10];
-        return sprintf(buffer, "%d", num);
+        return mirroredImage;
     }
 };
 

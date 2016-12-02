@@ -23,18 +23,6 @@ ostream & operator<<(ostream & ostr, const ProcessedImage & image)
 #ifdef __ISENSOR_H__
 
 #include "SDCardReader.h"
-#include "SerialDisplay.h"
-
-template<>
-SerialDisplay& operator<< (SerialDisplay& serial, const ProcessedImage & image)
-{
-    serial << image.size() << "\n";
-    for(const auto& row : image)
-    {
-        serial << row << "\n";
-    }
-    return serial;
-}
 
 #endif // #ifdef __ISENSOR_H__
 
