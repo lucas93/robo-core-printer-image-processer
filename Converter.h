@@ -1,5 +1,5 @@
-#ifndef ROBOCOREPRINTERIMAGECONVERTER_IMAGEPROCESSER_H
-#define ROBOCOREPRINTERIMAGECONVERTER_IMAGEPROCESSER_H
+#ifndef ROBOCOREPRINTERIMAGECONVERTER_CONVERTER_H
+#define ROBOCOREPRINTERIMAGECONVERTER_CONVERTER_H
 
 #include <string>
 #include <algorithm>
@@ -36,7 +36,7 @@ public:
     {
         prepareBmpImage(bmpImageFilaname);
         prepareResultImage();
-        convertBmpImageToProcessedImage();
+        convertBmpImageToConvertedImage();
         createMirrorOfImage(); // potrzebne by nie drukowało lustrzanego odbicia
         saveResultToFile(procesedImageFilename);
         return imageResult;
@@ -55,7 +55,9 @@ private:
         imageResult = ConvertedImage(height);
     }
 
-    void convertBmpImageToProcessedImage() // 2
+
+
+    void convertBmpImageToConvertedImage() // 2
     {
         int rowNumber = 0;
 
@@ -159,4 +161,4 @@ private:
 };
 
 
-#endif //ROBOCOREPRINTERIMAGECONVERTER_IMAGEPROCESSER_H
+#endif //ROBOCOREPRINTERIMAGECONVERTER_CONVERTER_H

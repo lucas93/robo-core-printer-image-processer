@@ -7,7 +7,7 @@
 using namespace std;
 
 // Trzyma jednobitowe zdjęcie w formie macierzy zer i jedynek
-class BitmapBoolImage : private vector< vector<bool> >
+class BitmapBoolImage : protected vector< vector<bool> >
 {
     using Bit = bool;
     using BitmapRow = vector<Bit>;

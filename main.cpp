@@ -4,9 +4,7 @@
 using namespace std;
 
 #include "ConvertedImage.h"
-#include "ImageProcesser.h"
-
-
+#include "Converter.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,11 +15,11 @@ int main(int argc, char *argv[])
     int WIDTH_MAX{ stoi(argv[3]) };
     int HEIGHT_MAX{ stoi(argv[4]) };
 
-    ImageConverter processer(bmpFileName,
+    ImageConverter converter(bmpFileName,
                              RoboCoreFileName,
                              WIDTH_MAX,
                              HEIGHT_MAX);
-    auto baseImage = processer.ConvertAndSaveImage();
+    auto baseImage = converter.ConvertAndSaveImage();
 
 
     // test
